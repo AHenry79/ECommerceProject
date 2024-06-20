@@ -65,6 +65,9 @@ export const api = createApi({
         body: cred,
       }),
     }),
+    findUserWithToken: build.query({
+      query: () => "/api/users/check/token",
+    }),
     logout: build.mutation({
       queryFn: () => ({ data: {} }),
     }),
@@ -86,4 +89,5 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useLogoutMutation,
+  useFindUserWithTokenQuery,
 } = api;

@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import { api } from "./api";
 
 function storeToken(state, { payload }) {
-  state.credentials = { token: payload.token, user: { ...payload.user } };
+  state.credentials = { token: payload.token, users: { ...payload.users } };
   window.sessionStorage.setItem(
     "CREDENTIALS",
     JSON.stringify({
       token: payload.token,
-      user: { ...payload.user },
+      users: { ...payload.users },
     })
   );
 }
@@ -17,9 +17,10 @@ const authSlice = createSlice({
   initialState: {
     credentials: JSON.parse(window.sessionStorage.getItem("CREDENTIALS")) || {
       token: "",
-      user: {
+      users: {
         id: null,
         username: null,
+        is_admin: null,
       },
     },
   },
@@ -30,9 +31,10 @@ const authSlice = createSlice({
     build.addMatcher(api.endpoints.logout.matchFulfilled, (state) => {
       state.credentials = {
         token: "",
-        user: {
+        users: {
           id: null,
           username: null,
+          is_admin: null,
         },
       };
       window.sessionStorage.removeItem("CREDENTIALS");

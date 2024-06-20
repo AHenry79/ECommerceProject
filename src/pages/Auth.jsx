@@ -8,7 +8,7 @@ function Auth() {
   const [email, setEmail] = useState("");
   const [phone_number, setPhone_number] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
-  const [form, setForm] = useState(false);
+  const [form, setForm] = useState(true);
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
 
@@ -21,6 +21,7 @@ function Auth() {
     } catch (error) {
       console.log(error);
     }
+    navigate("/");
   };
   useEffect(() => {
     {
@@ -31,9 +32,11 @@ function Auth() {
   return (
     <>
       {window.sessionStorage.getItem("CREDENTIALS") && form ? (
-        <h1>Successfully Logged In!</h1>
+        <>
+          <h1>Successfully Logged In!</h1>
+        </>
       ) : window.sessionStorage.getItem("CREDENTIALS") && !form ? (
-        <h1>Successfully Registered</h1>
+        <h1>Successfully Registered!</h1>
       ) : (
         <div id="form">
           {!form ? <h1>Register:</h1> : <h1>Login:</h1>}
