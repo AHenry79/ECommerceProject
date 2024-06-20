@@ -1,5 +1,5 @@
-import { createApi } from "@reduxjs/toolkit/query";
-import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 
 export const api = createApi({
   reducerPath: "api",
@@ -65,6 +65,9 @@ export const api = createApi({
         body: cred,
       }),
     }),
+    findUserWithToken: build.query({
+      query: () => "/api/users/check/token",
+    }),
     logout: build.mutation({
       queryFn: () => ({ data: {} }),
     }),
@@ -86,4 +89,5 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useLogoutMutation,
+  useFindUserWithTokenQuery,
 } = api;
