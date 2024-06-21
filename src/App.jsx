@@ -6,6 +6,8 @@ import ProductsPage from "./pages/ProductsPage";
 import { useGetAllProductsQuery } from "./slices/api";
 import SingleProduct from "./pages/SingleProductPage";
 import CartPage from "./pages/Cart";
+import AddProduct from "./pages/AddProduct";
+import ScrollList from "./pages/AccountPage";
 
 function App() {
   useGetAllProductsQuery();
@@ -19,6 +21,8 @@ function App() {
         <Route path={"/products"} element={<ProductsPage />} />
         <Route path={"/products/:id"} element={<SingleProduct />} />
         <Route path={"/cart"} element={<CartPage />} />
+        <Route path={"/addProducts"} element={<AddProduct />} />
+        <Route path={"/profile"} element={<ScrollList />} />
       </Routes>
     </>
   );

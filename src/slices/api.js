@@ -5,6 +5,15 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:6800/",
+    prepareHeaders: (headers, { getState }) => {
+      const credentials = window.sessionStorage.getItem("CREDENTIALS");
+      const parsedCredentials = JSON.parse(credentials || "{}");
+      const token = parsedCredentials.token;
+      if (token) {
+        headers.set("Authorization", token);
+      }
+      return headers;
+    },
   }),
   endpoints: (build) => ({
     getAllUsers: build.query({
@@ -32,8 +41,8 @@ export const api = createApi({
       query: (id) => `api/orders/users/` + id,
     }),
     addToCartByUserId: build.mutation({
-      query: (body) => ({
-        url: "api/cart",
+      query: (body, id) => ({
+        url: `api/cart/` + id,
         method: "POST",
         body: body,
       }),
@@ -68,6 +77,13 @@ export const api = createApi({
     findUserWithToken: build.query({
       query: () => "/api/users/check/token",
     }),
+    addProducts: build.mutation({
+      query: (body) => ({
+        url: "api/products",
+        method: "POST",
+        body: body,
+      }),
+    }),
     logout: build.mutation({
       queryFn: () => ({ data: {} }),
     }),
@@ -90,4 +106,5 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useFindUserWithTokenQuery,
+  useAddProductsMutation,
 } = api;

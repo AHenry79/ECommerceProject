@@ -88,10 +88,13 @@ function Auth() {
             {!form ? (
               <p>Already have an account?</p>
             ) : (
-              <p>Don't have an account?</p>
+              <p>
+                <br />
+                Don't have an account?
+              </p>
             )}
             <button onClick={() => setForm(!form)} className="form-button">
-              {form ? "Register here!" : "Login here!"}
+              {form ? "Register Here!" : "Login Here!"}
             </button>
           </div>
         </div>

@@ -11,18 +11,23 @@ function storeToken(state, { payload }) {
     })
   );
 }
-
+const initialCredentials = JSON.parse(
+  window.sessionStorage.getItem("CREDENTIALS")
+);
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    credentials: JSON.parse(window.sessionStorage.getItem("CREDENTIALS")) || {
-      token: "",
-      users: {
-        id: null,
-        username: null,
-        is_admin: null,
-      },
-    },
+    credentials:
+      initialCredentials && initialCredentials.token
+        ? initialCredentials
+        : {
+            token: "",
+            users: {
+              id: null,
+              username: null,
+              is_admin: null,
+            },
+          },
   },
   reducers: {},
   extraReducers: (build) => {

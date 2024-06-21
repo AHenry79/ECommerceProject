@@ -18,6 +18,13 @@ const productsSlice = createSlice({
         return payload;
       }
     );
+    builder.addMatcher(
+      api.endpoints.addProducts.matchFulfilled,
+      (state, { payload }) => {
+        state.push(payload);
+        return state;
+      }
+    );
   },
 });
 

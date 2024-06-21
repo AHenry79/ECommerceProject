@@ -1,11 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAddToCartByUserIdMutation } from "../slices/api";
 
 function SingleProduct() {
   const productsData = useSelector((state) => state.products);
   const params = useParams();
   const chosenProduct = productsData.find((i) => i.id === Number(params.id));
   const user = useSelector((state) => state.auth.credentials.users);
+  const [addToCart] = useAddToCartByUserIdMutation(chosenProduct.id);
+
   return (
     <>
       <div id={"productDetailWrapper"}>
@@ -25,6 +28,7 @@ function SingleProduct() {
             alt={chosenProduct.description}
           />
         </div>
+        {user && <button onClick={addToCart}>Add to Cart</button>}
         {user.is_admin && <button>Delete Product</button>}
       </div>
     </>

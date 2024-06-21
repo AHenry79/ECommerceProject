@@ -3,6 +3,8 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import LocalGroceryStoreRoundedIcon from "@mui/icons-material/LocalGroceryStoreRounded";
 import Person2RoundedIcon from "@mui/icons-material/Person2Rounded";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { LoginRounded } from "@mui/icons-material";
 import { useLogoutMutation } from "../slices/api";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -10,7 +12,7 @@ import { useSelector } from "react-redux";
 const Nav = () => {
   const [logout] = useLogoutMutation();
   const [show, setShow] = useState(false);
-  const user = useSelector((state) => state.auth.credentials.users);
+  const user = useSelector((state) => state.auth.credentials);
   useEffect(() => {
     let previousScrollPosition = 0;
     let currentScrollPosition = 0;
@@ -42,7 +44,14 @@ const Nav = () => {
                 <MenuBookRoundedIcon className="productsicon"></MenuBookRoundedIcon>
               </Link>
             </li>
-            {user.is_admin && <li>Add products</li>}
+            {user.users.is_admin && (
+              <li>
+                <Link to={"/addProducts"}>
+                  Add products
+                  <AddCircleIcon className={"addCircleIcon"} />
+                </Link>
+              </li>
+            )}
             <li>
               <Link to="/cart">
                 Cart
@@ -73,7 +82,10 @@ const Nav = () => {
             </Link>
           </li>
           <li>
-            <Link to={"/login"}>Login</Link>
+            <Link to={"/login"}>
+              Login
+              <LoginRounded className="loginicon" />
+            </Link>
           </li>
         </ul>
       )}
