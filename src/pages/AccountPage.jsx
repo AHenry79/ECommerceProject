@@ -32,7 +32,12 @@ function ScrollList() {
                 primary={i.quantity === 0 ? i.quantity + 1 : i.quantity}
                 className="quantity"
               />
-              <ListItemText primary={`$${i.price}`} className="quantity" />
+              <ListItemText
+                primary={
+                  i.price === 0.0 ? "Trouble fetching price..." : `$${i.price}`
+                }
+                className="quantity"
+              />
             </ListItem>
           ))
         )}

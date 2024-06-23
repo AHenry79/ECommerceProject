@@ -54,7 +54,10 @@ const CartPage = () => {
   const handleCheckout = async () => {
     cartItems.forEach((i) => {
       const productId = i.product_id;
-      const quant = Number(localStorage.getItem(`quantity-${i.cart_id}`));
+      let quant = Number(localStorage.getItem(`quantity-${i.cart_id}`));
+      if (quant === 0) {
+        quant = 1;
+      }
       const pri = (Number(i.price) * quant).toFixed(2);
       const car = i.cart_id;
 
