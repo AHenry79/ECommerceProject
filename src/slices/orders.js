@@ -12,6 +12,14 @@ const ordersSlice = createSlice({
         return payload;
       }
     );
+    builder.addMatcher(
+      api.endpoints.checkOut.matchFulfilled,
+      (state, { payload }) => {
+        console.log(payload);
+        state.push(payload);
+        return state;
+      }
+    );
   },
 });
 export default ordersSlice.reducer;

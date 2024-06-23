@@ -1,13 +1,10 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-// import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   useAddToCartByUserIdMutation,
   useGetAllProductsQuery,
 } from "../slices/api";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../slices/cart";
 import { useNavigate } from "react-router-dom";
 
 function Products() {
@@ -15,17 +12,22 @@ function Products() {
   const products = useSelector((state) => state.products);
   const [product, setProduct] = useState("");
   const user = useSelector((state) => state.auth.credentials.users);
+  const [token, setToken] = useState(null);
+  const user_token = useSelector((state) => state.auth.credentials.token);
   const [addToCartFunc] = useAddToCartByUserIdMutation();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleAddToCart = (e, productId) => {
+  useEffect(() => {
+    setToken(user_token);
+  }, [user_token]);
+
+  const handleAddToCart = async (e) => {
     let positionClick = e.target;
     if (positionClick.classList.contains("addToCartButton")) {
       let product_id = positionClick.parentElement.dataset.id;
-      addToCartFunc({ product_id: product_id });
+      await addToCartFunc({ product_id: product_id });
+      window.location.reload();
     }
-    dispatch(addToCart(productId));
   };
   const handleEditButton = (e) => {
     let positionClick = e.target;
@@ -72,7 +74,7 @@ function Products() {
                   )}
                   <h2>Category: {i.description}</h2>
                   <h2>Price: ${i.price}</h2>
-                  {!user.id ? (
+                  {!user.id && !token ? (
                     <h2>Must be logged in to add to cart!</h2>
                   ) : (
                     <>

@@ -4,16 +4,23 @@ import {
   useAddToCartByUserIdMutation,
   useDeleteProductMutation,
 } from "../slices/api";
+import { useState, useEffect } from "react";
 
 function SingleProduct() {
   const productsData = useSelector((state) => state.products);
   const params = useParams();
   const chosenProduct = productsData.find((i) => i.id === Number(params.id));
-  console.log(chosenProduct);
   const user = useSelector((state) => state.auth.credentials.users);
+  const user_token = useSelector((state) => state.auth.credentials.token);
+  const [token, setToken] = useState(null);
   const [addToCart] = useAddToCartByUserIdMutation();
   const [del] = useDeleteProductMutation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setToken(user_token);
+  }, [user_token]);
+
   const handleAddToCart = () => {
     addToCart({ product_id: chosenProduct.id });
     navigate("/products");
@@ -42,10 +49,12 @@ function SingleProduct() {
             alt={chosenProduct.description}
           />
         </div>
-        {user && (
+        {!user.id && !token ? (
           <>
-            <button onClick={handleAddToCart}>Add to Cart</button>
+            <h1>You must be logged in to add to cart!</h1>
           </>
+        ) : (
+          <button onClick={handleAddToCart}>Add to Cart</button>
         )}
         {user.is_admin && (
           <button onClick={handleDeleteProduct}>Delete Product</button>

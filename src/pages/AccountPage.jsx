@@ -28,7 +28,8 @@ function ScrollList() {
               <ListItemText primary={i.customer_id} className="customerId" />
               <ListItemText primary={i.product_id} className="productId" />
               <ListItemText primary={i.ordered_at} className="date" />
-              {/* <ListItemText primary={} className="total" /> */}
+              <ListItemText primary={i.quantity} className="quantity" />
+              <ListItemText primary={`$${i.price}`} className="quantity" />
             </ListItem>
           ))
         )}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLoginMutation, useRegisterMutation } from "../slices/api";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Auth() {
   const [username, setUsername] = useState("");
@@ -11,6 +12,11 @@ function Auth() {
   const [form, setForm] = useState(true);
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
+  const [token, setToken] = useState(null);
+  const user_token = useSelector((state) => state.auth.credentials.token);
+  const updateToken = () => {
+    setToken(user_token);
+  };
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       submit();
@@ -25,7 +31,13 @@ function Auth() {
     } catch (error) {
       console.log(error);
     }
-    navigate("/");
+    updateToken();
+    if (form) {
+      navigate("/");
+    } else {
+      navigate("/login");
+      setForm(!form);
+    }
   };
   useEffect(() => {
     {
@@ -35,11 +47,11 @@ function Auth() {
 
   return (
     <>
-      {window.sessionStorage.getItem("CREDENTIALS") && form ? (
+      {token && form ? (
         <>
           <h1>Successfully Logged In!</h1>
         </>
-      ) : window.sessionStorage.getItem("CREDENTIALS") && !form ? (
+      ) : token && !form ? (
         <h1>Successfully Registered!</h1>
       ) : (
         <div id="form" onKeyDown={handleKeyDown}>

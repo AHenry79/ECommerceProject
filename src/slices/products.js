@@ -28,7 +28,6 @@ const productsSlice = createSlice({
     builder.addMatcher(
       api.endpoints.editProducts.matchFulfilled,
       (state, { payload }) => {
-        console.log("Edit Products Payload:", payload);
         return state.map((i) =>
           i.id === payload.id ? { ...i, ...payload } : i
         );

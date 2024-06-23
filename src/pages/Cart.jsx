@@ -3,8 +3,10 @@ import { useSelector } from "react-redux";
 import {
   useGetCartItemsByUserIdQuery,
   useDeleteCartItemByIdMutation,
+  useCheckOutMutation,
 } from "../slices/api";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const user = useSelector((state) => state.auth.credentials.users);
@@ -13,14 +15,20 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState([]);
   const [del] = useDeleteCartItemByIdMutation();
-
+  const [checkout] = useCheckOutMutation();
+  const navigate = useNavigate();
   useEffect(() => {
     if (cart) {
       setCartItems(cart);
       setQuantity(new Array(cart.length).fill(1));
       const storedQuantities = cart.map((item) => {
-        const storedQuantity =
-          localStorage.getItem(`quantity-${item.cart_id}`) || 1;
+        const cartId = item.cart_id;
+        const storedCheck = localStorage.getItem(`quantity-${cartId}`);
+
+        if (storedCheck && handleQuantityChange.called) {
+          localStorage.setItem(`quantity-${cartId}`, 1);
+        }
+        const storedQuantity = localStorage.getItem(`quantity-${cartId}`) || 1;
         return storedQuantity ? Number(storedQuantity) : 1;
       });
       setQuantity(storedQuantities);
@@ -43,8 +51,21 @@ const CartPage = () => {
     0
   );
 
-  const handleCheckout = () => {
-    alert("Proceeding to checkout!");
+  const handleCheckout = async () => {
+    cartItems.forEach((i) => {
+      const productId = i.product_id;
+      const quant = Number(localStorage.getItem(`quantity-${i.cart_id}`));
+      const pri = (Number(i.price) * quant).toFixed(2);
+      const car = i.cart_id;
+
+      checkout({
+        product_id: productId,
+        quantity: quant,
+        price: pri,
+      });
+      del(car);
+    });
+    navigate("/profile");
   };
   return (
     <div className="cartPage">
@@ -101,7 +122,9 @@ const CartPage = () => {
       )}
       <div className="cartTotal">
         <h3>Total: ${Number(totalPrice.toFixed(2))}</h3>
-        <button className="checkoutButton">Checkout</button>
+        <button className="checkoutButton" onClick={handleCheckout}>
+          Checkout
+        </button>
       </div>
     </div>
   );

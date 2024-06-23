@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const Nav = () => {
+  const token = useSelector((state) => state.auth.credentials.token);
   const [logout] = useLogoutMutation();
   const [show, setShow] = useState(false);
   const user = useSelector((state) => state.auth.credentials);
@@ -30,7 +31,7 @@ const Nav = () => {
   }, []);
   return (
     <nav className={`active ${show && "hidden"}`}>
-      {window.sessionStorage.getItem("CREDENTIALS") ? (
+      {token ? (
         <>
           <ul className="navlinks">
             <li>

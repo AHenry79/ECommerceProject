@@ -38,9 +38,6 @@ export const api = createApi({
     getSingleOrder: build.query({
       query: (id) => `api/orders` + id,
     }),
-    getProductsByOrderId: build.query({
-      query: (id) => `api/orders/users/` + id,
-    }),
     addToCartByUserId: build.mutation({
       query: (body) => ({
         url: `api/cart/`,
@@ -55,8 +52,8 @@ export const api = createApi({
       }),
     }),
     checkOut: build.mutation({
-      query: () => ({
-        url: "api/orders",
+      query: (body) => ({
+        url: `api/orders/`,
         method: "POST",
         body: body,
       }),
@@ -115,7 +112,6 @@ export const {
   useGetSingleUserByIdQuery,
   useGetAllOrdersQuery,
   useGetSingleOrderQuery,
-  useGetProductsByOrderIdQuery,
   useAddToCartByUserIdMutation,
   useDeleteCartItemByIdMutation,
   useCheckOutMutation,
