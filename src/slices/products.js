@@ -25,6 +25,21 @@ const productsSlice = createSlice({
         return state;
       }
     );
+    builder.addMatcher(
+      api.endpoints.editProducts.matchFulfilled,
+      (state, { payload }) => {
+        console.log("Edit Products Payload:", payload);
+        return state.map((i) =>
+          i.id === payload.id ? { ...i, ...payload } : i
+        );
+      }
+    );
+    builder.addMatcher(
+      api.endpoints.deleteProduct.matchFulfilled,
+      (state, { payload }) => {
+        return state.filter((i) => i.id !== payload.id);
+      }
+    );
   },
 });
 

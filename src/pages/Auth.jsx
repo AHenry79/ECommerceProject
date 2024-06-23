@@ -11,7 +11,11 @@ function Auth() {
   const [form, setForm] = useState(true);
   const [login] = useLoginMutation();
   const [register] = useRegisterMutation();
-
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      submit();
+    }
+  };
   const navigate = useNavigate();
   const submit = async () => {
     const authMethod = form ? login : register;
@@ -38,7 +42,7 @@ function Auth() {
       ) : window.sessionStorage.getItem("CREDENTIALS") && !form ? (
         <h1>Successfully Registered!</h1>
       ) : (
-        <div id="form">
+        <div id="form" onKeyDown={handleKeyDown}>
           {!form ? <h1>Register:</h1> : <h1>Login:</h1>}
           <input
             type={"text"}

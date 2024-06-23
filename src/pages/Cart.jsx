@@ -7,23 +7,30 @@ import {
 import { useEffect, useState } from "react";
 
 const CartPage = () => {
-  const user = useSelector((state) => state.auth.credentials);
-  useGetCartItemsByUserIdQuery(user.users.id);
+  const user = useSelector((state) => state.auth.credentials.users);
+  const { isLoading } = useGetCartItemsByUserIdQuery(user.id);
   const cart = useSelector((state) => state.carts.cart);
   const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState([]);
   const [del] = useDeleteCartItemByIdMutation();
-  console.log(cart);
+
   useEffect(() => {
     if (cart) {
       setCartItems(cart);
       setQuantity(new Array(cart.length).fill(1));
+      const storedQuantities = cart.map((item) => {
+        const storedQuantity =
+          localStorage.getItem(`quantity-${item.cart_id}`) || 1;
+        return storedQuantity ? Number(storedQuantity) : 1;
+      });
+      setQuantity(storedQuantities);
     }
   }, [cart]);
-  const handleQuantityChange = (index, newQuantity) => {
+  const handleQuantityChange = async (index, newQuantity) => {
     setQuantity((prevQuantities) => {
       const newQuantities = [...prevQuantities];
       newQuantities[index] = newQuantity;
+      localStorage.setItem(`quantity-${cartItems[index].cart_id}`, newQuantity);
       return newQuantities;
     });
   };
@@ -36,14 +43,15 @@ const CartPage = () => {
     0
   );
 
-  // const handleCheckout = () => {
-  //   alert("Proceeding to checkout!");
-  // };
-
+  const handleCheckout = () => {
+    alert("Proceeding to checkout!");
+  };
   return (
     <div className="cartPage">
-      <h1>Shopping Cart</h1>
-      {cartItems.length === 0 ? (
+      <h1 className="shoppingCartHeader">Shopping Cart</h1>
+      {isLoading ? (
+        <p className="emptyCart">Loading Cart...</p>
+      ) : cartItems.length === 0 ? (
         <p className="emptyCart">Your cart is empty. Fill it up!</p>
       ) : (
         <div className="cartItems">
@@ -55,31 +63,35 @@ const CartPage = () => {
                 <span>Quantity: {quantity[index]}</span>
                 <button
                   onClick={() =>
-                    handleQuantityChange(index, quantity[index] + 1)
+                    handleQuantityChange(index, Number(quantity[index]) + 1)
                   }
+                  className="test"
                 >
                   Add
                 </button>
                 {quantity[index] > 1 ? (
                   <button
                     onClick={() =>
-                      handleQuantityChange(index, quantity[index] - 1)
+                      handleQuantityChange(index, Number(quantity[index]) - 1)
                     }
+                    className="test"
                   >
                     Remove
                   </button>
                 ) : (
-                  <button onClick={() => handleRemove(item.cart_id)}>
+                  <button
+                    onClick={() => handleRemove(item.cart_id, item.product_id)}
+                  >
                     Remove
                   </button>
                 )}
                 <span className="itemTotal">
-                  Total: ${Number(item.price) * quantity[index].toFixed(2)}
+                  Total: ${(Number(item.price) * quantity[index]).toFixed(2)}
                 </span>
               </div>
               <button
                 className="deleteItemButton"
-                onClick={() => handleRemove(item.id)}
+                onClick={() => handleRemove(item.cart_id, item.product_id)}
               >
                 <DeleteRoundedIcon />
               </button>

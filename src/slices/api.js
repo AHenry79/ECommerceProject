@@ -11,6 +11,7 @@ export const api = createApi({
       const token = parsedCredentials.token;
       if (token) {
         headers.set("Authorization", token);
+        headers.set("Content-Type", "application/json");
       }
       return headers;
     },
@@ -41,8 +42,8 @@ export const api = createApi({
       query: (id) => `api/orders/users/` + id,
     }),
     addToCartByUserId: build.mutation({
-      query: (body, id) => ({
-        url: `api/cart/` + id,
+      query: (body) => ({
+        url: `api/cart/`,
         method: "POST",
         body: body,
       }),
@@ -79,10 +80,26 @@ export const api = createApi({
     }),
     addProducts: build.mutation({
       query: (body) => ({
-        url: "api/products",
+        url: "api/products/",
         method: "POST",
         body: body,
       }),
+    }),
+    editProducts: build.mutation({
+      query: (body) => ({
+        url: `api/products/editProducts/` + body.id,
+        method: "PATCH",
+        body: body,
+      }),
+    }),
+    deleteProduct: build.mutation({
+      query: (id) => ({
+        url: `api/products/` + id,
+        method: "DELETE",
+      }),
+    }),
+    getOrderByUserId: build.query({
+      query: (id) => `/api/orders/users/` + id,
     }),
     logout: build.mutation({
       queryFn: () => ({ data: {} }),
@@ -107,4 +124,7 @@ export const {
   useLogoutMutation,
   useFindUserWithTokenQuery,
   useAddProductsMutation,
+  useEditProductsMutation,
+  useDeleteProductMutation,
+  useGetOrderByUserIdQuery,
 } = api;

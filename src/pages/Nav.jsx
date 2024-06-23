@@ -13,6 +13,7 @@ const Nav = () => {
   const [logout] = useLogoutMutation();
   const [show, setShow] = useState(false);
   const user = useSelector((state) => state.auth.credentials);
+  const user_id = useSelector((state) => state.auth.credentials.users.id);
   useEffect(() => {
     let previousScrollPosition = 0;
     let currentScrollPosition = 0;
@@ -53,7 +54,7 @@ const Nav = () => {
               </li>
             )}
             <li>
-              <Link to="/cart">
+              <Link to={`/cart/users/${user_id}`}>
                 Cart
                 <LocalGroceryStoreRoundedIcon className="carticon"></LocalGroceryStoreRoundedIcon>
               </Link>
@@ -64,7 +65,9 @@ const Nav = () => {
                 <Person2RoundedIcon className="icons"></Person2RoundedIcon>
               </Link>
             </li>
-            <button onClick={logout}>LOGOUT</button>
+            <button onClick={logout} className="logoutbutton">
+              LOGOUT
+            </button>
           </ul>
         </>
       ) : (

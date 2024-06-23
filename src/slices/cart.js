@@ -9,7 +9,11 @@ const cartSlice = createSlice({
     cart: [],
     quantity: null,
   },
-  reducers: {},
+  reducers: {
+    addToCart: (state, { payload }) => {
+      state.cart = [...state.cart, payload];
+    },
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       api.endpoints.getCartItemsByUserId.matchFulfilled,
@@ -32,4 +36,5 @@ const cartSlice = createSlice({
     );
   },
 });
+export const { addToCart } = cartSlice.actions;
 export default cartSlice.reducer;

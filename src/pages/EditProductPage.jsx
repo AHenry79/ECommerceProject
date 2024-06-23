@@ -1,21 +1,26 @@
 import { useState } from "react";
-import { useAddProductsMutation } from "../slices/api";
-import { useNavigate } from "react-router-dom";
-function AddProduct() {
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [image, setImage] = useState("");
-  const [availability, setAvailability] = useState(true);
-  const [nutrition, setNutrition] = useState("");
+import { useEditProductsMutation } from "../slices/api";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
+function EditProduct() {
+  const [editProduct] = useEditProductsMutation();
+  const product_info = useSelector((state) => state.products);
+  const params = useParams();
+  const chosenProduct = product_info.find((i) => i.id === Number(params.id));
+
+  const [price, setPrice] = useState(chosenProduct.price);
+  const [description, setDescription] = useState(chosenProduct.description);
+  const [name, setName] = useState(chosenProduct.name);
+  const [category, setCategory] = useState(chosenProduct.categories);
+  const [image, setImage] = useState(chosenProduct.image_url);
+  const [availability, setAvailability] = useState(chosenProduct.availability);
+  const [nutrition, setNutrition] = useState(chosenProduct.nutrition_facts);
   const navigate = useNavigate();
-
-  const [addProducts] = useAddProductsMutation();
+  console.log(chosenProduct.id);
 
   const onSubmit = async () => {
-    await addProducts({
+    await editProduct({
       price: price,
       description: description,
       name: name,
@@ -23,10 +28,9 @@ function AddProduct() {
       image_url: image,
       availability: availability,
       nutrition_facts: nutrition,
-    }).then(() => {
-      navigate("/products");
-      window.location.reload();
+      id: chosenProduct.id,
     });
+    navigate("/products");
   };
   return (
     <>
@@ -80,4 +84,4 @@ function AddProduct() {
     </>
   );
 }
-export default AddProduct;
+export default EditProduct;
